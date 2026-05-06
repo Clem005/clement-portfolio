@@ -13,12 +13,9 @@ interface ExperienceType {
 
 export default function Experience() {
   const [selectedExp, setSelectedExp] = useState<ExperienceType | null>(null);
-  
-  // NEW: Live Database State
   const [experiences, setExperiences] = useState<ExperienceType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // NEW: Fetch live data on load
   useEffect(() => {
     const fetchLiveExperiences = async () => {
       try {
@@ -48,15 +45,16 @@ export default function Experience() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" as const }} // FIXED HERE
           className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
         >
           Experience
         </motion.h2>
 
-        {/* Dynamic List Rendering */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full" />
+            {/* FIXED HERE ("linear" as const) */}
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" as const }} className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full" />
             <p className="text-white/50 tracking-widest text-xs uppercase">Loading Database...</p>
           </div>
         ) : experiences.length === 0 ? (
@@ -69,7 +67,7 @@ export default function Experience() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
+                transition={{ duration: 0.6, delay: idx * 0.1, ease: "easeOut" as const }} // FIXED HERE
                 onClick={() => setSelectedExp(exp)}
                 className="glass-card p-8 rounded-2xl cursor-pointer group hover:border-white/20 transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-[220px]"
               >
@@ -94,7 +92,6 @@ export default function Experience() {
 
       </div>
 
-      {/* Slide-Up Modal stays exactly the same! */}
       <AnimatePresence>
         {selectedExp && (
           <motion.div 

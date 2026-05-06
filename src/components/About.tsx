@@ -11,18 +11,18 @@ export default function About() {
 
   const textVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } } // FIXED HERE
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" as const } }
   };
 
   const backImageVariants = {
     hidden: { opacity: 0, x: 20, rotate: 0 },
     visible: { 
       opacity: 0.7, x: 0, y: 0, rotate: -6, scale: 1,
-      transition: { duration: 1, delay: 0.2, ease: "easeOut" } 
+      transition: { duration: 1, delay: 0.2, ease: "easeOut" as const } 
     },
     hover: { 
       opacity: 1, x: "-15%", y: "-5%", rotate: -12, scale: 1.05,
-      transition: { duration: 0.5, ease: "easeOut" } // FIXED HERE
+      transition: { duration: 0.5, ease: "easeOut" as const } 
     }
   };
 
@@ -30,11 +30,11 @@ export default function About() {
     hidden: { opacity: 0, x: 50, y: 30, rotate: 0 },
     visible: { 
       opacity: 1, x: 0, y: 0, rotate: 4, 
-      transition: { duration: 1, delay: 0.4, ease: "easeOut" } 
+      transition: { duration: 1, delay: 0.4, ease: "easeOut" as const } 
     },
     hover: { 
       x: "15%", y: "10%", rotate: 12, 
-      transition: { duration: 0.5, ease: "easeOut" } // FIXED HERE
+      transition: { duration: 0.5, ease: "easeOut" as const } 
     }
   };
 
@@ -44,7 +44,7 @@ export default function About() {
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: "easeOut" as const }}
         className="glass-card max-w-[1200px] w-full rounded-2xl md:rounded-[2rem] p-8 md:p-16 flex flex-col lg:flex-row items-center gap-12 lg:gap-16 relative"
       >
         

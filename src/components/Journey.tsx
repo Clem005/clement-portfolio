@@ -25,6 +25,7 @@ export default function Journey() {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: "easeOut" as const }} // FIXED HERE
         className="text-4xl md:text-5xl font-serif text-white mb-16 text-center tracking-wide"
       >
         My Timeline
@@ -35,7 +36,6 @@ export default function Journey() {
         {/* The Central Vertical Line */}
         <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent -translate-x-1/2"></div>
 
-        {/* Reduced mobile gap from gap-12 to gap-8 */}
         <div className="flex flex-col gap-8 md:gap-0">
           {timelineData.map((item, index) => {
             const isEven = index % 2 === 0;
@@ -46,8 +46,7 @@ export default function Journey() {
                 initial={{ opacity: 0, y: 20, x: isEven ? -15 : 15 }}
                 whileInView={{ opacity: 1, y: 0, x: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-                // Reduced desktop vertical padding from py-8 to py-3 to bring them much closer
+                transition={{ duration: 0.6, ease: "easeOut" as const }} // FIXED HERE
                 className={`relative flex flex-col md:flex-row items-start md:items-center w-full md:py-3 ${
                   isEven ? 'md:justify-start' : 'md:justify-end'
                 }`}
@@ -58,7 +57,6 @@ export default function Journey() {
 
                 {/* Content Box */}
                 <div 
-                  // Brought the boxes slightly closer to the center line (pr-12 -> pr-8)
                   className={`w-full md:w-[46%] pl-10 md:pl-0 ${
                     isEven ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'
                   }`}

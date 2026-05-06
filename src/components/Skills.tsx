@@ -8,98 +8,58 @@ import {
   Handshake 
 } from 'lucide-react';
 
-// --- DATA MAPPING ---
-
 const technicalSkills = [
-  // ROW 1: The Core Web/Code (5 items)
   { name: "HTML", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
   { name: "CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
   { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
   { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
   { name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" }, 
-  
-  // ROW 2: Data, DevOps & Project Tools (5 items)
   { name: "Oracle", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg" },
   { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
   { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
   { name: "Jira", icon: "https://cdn.simpleicons.org/jira/0052CC" }, 
   { name: "ClickUp", icon: "https://cdn.simpleicons.org/clickup/7B68EE" }, 
-
-  // ROW 3: AI, Automation & OS (5 items)
   { name: "n8n", icon: "https://cdn.simpleicons.org/n8n/EA4343" }, 
   { name: "Make", icon: "https://cdn.simpleicons.org/make/512DA8" }, 
   { name: "Zapier", icon: "https://cdn.simpleicons.org/zapier/FF4A00" }, 
-  { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }, // Swapped Excel for Linux
+  { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }, 
   { name: "Claude", icon: "https://cdn.simpleicons.org/anthropic/D97757" }, 
 ];
 
 const professionalSkills = [
-  {
-    title: "Teaching & Tutoring",
-    subtitle: "IFS 140 Tutor, SQL Boot Camp Organizer",
-    icon: GraduationCap
-  },
-  {
-    title: "Leadership",
-    subtitle: "Team leadership and strategic direction",
-    icon: Target
-  },
-  {
-    title: "Team Management",
-    subtitle: "Football Coach, Team coordination",
-    icon: Users
-  },
-  {
-    title: "Project Management",
-    subtitle: "End-to-end project delivery",
-    icon: ClipboardList
-  },
-  {
-    title: "Communication",
-    subtitle: "Client relations and presentations",
-    icon: MessageSquare
-  },
-  {
-    title: "Mentorship",
-    subtitle: "Peer guidance and skill development",
-    icon: Handshake
-  }
+  { title: "Teaching & Tutoring", subtitle: "IFS 140 Tutor, SQL Boot Camp Organizer", icon: GraduationCap },
+  { title: "Leadership", subtitle: "Team leadership and strategic direction", icon: Target },
+  { title: "Team Management", subtitle: "Football Coach, Team coordination", icon: Users },
+  { title: "Project Management", subtitle: "End-to-end project delivery", icon: ClipboardList },
+  { title: "Communication", subtitle: "Client relations and presentations", icon: MessageSquare },
+  { title: "Mentorship", subtitle: "Peer guidance and skill development", icon: Handshake }
 ];
 
-// --- ANIMATION VARIANTS ---
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-};
-
 export default function Skills() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } } // FIXED HERE
+  };
+
   return (
     <section id="skills" className="w-full py-32 bg-black flex flex-col items-center overflow-hidden">
       <div className="max-w-6xl w-full px-6 flex flex-col items-center">
         
-        {/* Main Section Title */}
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, ease: "easeOut" as const }} // FIXED HERE
           className="text-5xl md:text-6xl font-serif text-white mb-20 text-center tracking-wide"
         >
           Skills & Expertise
         </motion.h1>
 
-        {/* ========================================= */}
-        {/* 1. TECHNICAL SKILLS ROW (5-5-5 Layout)    */}
-        {/* ========================================= */}
         <div className="w-full flex flex-col items-center mb-32">
           <motion.h2 
             initial={{ opacity: 0 }}
@@ -123,12 +83,6 @@ export default function Skills() {
                 variants={itemVariants}
                 className="flex flex-col items-center gap-4 cursor-pointer group w-[25%] md:w-[15%]"
               >
-                {/* 
-                  UPDATED DULL EFFECT: Increased brightness!
-                  saturate-[0.6] (60% color), opacity-80 (80% visible)
-                  HOVER:
-                  saturate-100 (100% color), opacity-100 (100% visible)
-                */}
                 <img 
                   src={skill.icon} 
                   alt={skill.name} 
@@ -142,10 +96,6 @@ export default function Skills() {
           </motion.div>
         </div>
 
-
-        {/* ========================================= */}
-        {/* 2. PROFESSIONAL SKILLS GRID                 */}
-        {/* ========================================= */}
         <div className="w-full flex flex-col items-center">
           <motion.h2 
             initial={{ opacity: 0 }}
