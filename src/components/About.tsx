@@ -94,7 +94,7 @@ export default function About() {
           />
           <motion.img 
             variants={frontImageVariants}
-            src="/about-front.jpg" 
+            src="/about-front.jpeg" 
             alt="Foreground Action"
             className="absolute top-[5%] right-0 w-[75%] h-[85%] object-cover rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.7)] z-10"
             onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop' }}
