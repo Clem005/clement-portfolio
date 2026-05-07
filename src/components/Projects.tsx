@@ -8,18 +8,6 @@ const GitHubLogo = () => (
   </svg>
 );
 
-const formatImageUrl = (url: string) => {
-  if (!url) return '';
-  try {
-    const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-    if (driveMatch) return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
-    if (url.includes('github.com') && url.includes('/blob/')) return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-    return url;
-  } catch (e) {
-    return url;
-  }
-};
-
 interface ProjectType {
   id: string;
   title: string;
@@ -43,7 +31,7 @@ export default function Projects() {
         const data = await res.json();
         setProjects(data);
       } catch (error) {
-        console.error("Failed to fetch projects from backend:", error);
+        console.error("Failed to fetch projects:", error);
       } finally {
         setIsLoading(false);
       }
@@ -102,19 +90,23 @@ export default function Projects() {
                 onClick={() => setSelectedProject(project)}
                 className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
               >
+                {/* DIRECT IMAGE LINK */}
                 <img 
-                  src={formatImageUrl(project.imageUrl)} 
+                  src={project.imageUrl} 
                   alt={project.title} 
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => { 
                     e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(project.title)}` 
                   }}
                 />
+                
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                
                 <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-out">
                   <h3 className="text-xl md:text-2xl font-serif text-white mb-2 drop-shadow-md">
                     {project.title}
                   </h3>
+                  
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                     <p className="text-[13px] md:text-sm text-white/80 mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed">
                       {project.description}
@@ -146,7 +138,6 @@ export default function Projects() {
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               onClick={(e) => e.stopPropagation()}
-              // FIXED MODAL LAYOUT: Removed center alignment, added internal scrolling, fixed padding
               className="glass-card w-full md:max-w-5xl bg-black border-t md:border border-white/10 rounded-t-[2rem] md:rounded-[2rem] p-6 md:p-10 max-h-[90vh] flex flex-col md:flex-row gap-8 relative overflow-hidden"
             >
               
@@ -157,20 +148,17 @@ export default function Projects() {
                 <X size={24} />
               </button>
 
-              {/* LEFT SIDE: Image (Anchored and constrained) */}
               <div className="w-full md:w-[45%] h-[250px] md:h-full md:min-h-[400px] flex-shrink-0">
+                {/* DIRECT IMAGE LINK */}
                 <img 
-                  src={formatImageUrl(selectedProject.imageUrl)} 
+                  src={selectedProject.imageUrl} 
                   alt={selectedProject.title} 
                   className="w-full h-full object-cover rounded-xl border border-white/10"
                   onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(selectedProject.title)}` }}
                 />
               </div>
 
-              {/* RIGHT SIDE: Details (Fixed alignment to START, added scroll overflow) */}
               <div className="w-full md:w-[55%] flex flex-col justify-start overflow-y-auto pr-2 md:pr-4 pb-4">
-                
-                {/* Title starts exactly at the top now */}
                 <h3 className="text-3xl md:text-4xl font-serif text-white mb-6 pr-8 mt-2">
                   {selectedProject.title}
                 </h3>
