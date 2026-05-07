@@ -9,20 +9,25 @@ import {
 } from 'lucide-react';
 
 const technicalSkills = [
+  // ROW 1: The Core Web/Code (5 items)
   { name: "HTML", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" },
   { name: "CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
   { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
   { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-  { name: "SQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" }, 
+  { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" }, // Swapped SQL dolphin for PostgreSQL
+  
+  // ROW 2: Data, DevOps & Project Tools (5 items)
   { name: "Oracle", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg" },
   { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
   { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" },
   { name: "Jira", icon: "https://cdn.simpleicons.org/jira/0052CC" }, 
   { name: "ClickUp", icon: "https://cdn.simpleicons.org/clickup/7B68EE" }, 
+
+  // ROW 3: AI, Automation & UI (5 items)
   { name: "n8n", icon: "https://cdn.simpleicons.org/n8n/EA4343" }, 
   { name: "Make", icon: "https://cdn.simpleicons.org/make/512DA8" }, 
   { name: "Zapier", icon: "https://cdn.simpleicons.org/zapier/FF4A00" }, 
-  { name: "Linux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" }, 
+  { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" }, // Swapped Linux for React
   { name: "Claude", icon: "https://cdn.simpleicons.org/anthropic/D97757" }, 
 ];
 
@@ -43,7 +48,7 @@ export default function Skills() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } } // FIXED HERE
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } } 
   };
 
   return (
@@ -54,7 +59,7 @@ export default function Skills() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" as const }} // FIXED HERE
+          transition={{ duration: 0.8, ease: "easeOut" as const }} 
           className="text-5xl md:text-6xl font-serif text-white mb-20 text-center tracking-wide"
         >
           Skills & Expertise
