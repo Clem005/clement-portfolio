@@ -31,7 +31,7 @@ export default function Projects() {
         const data = await res.json();
         setProjects(data);
       } catch (error) {
-        console.error("Failed to fetch projects:", error);
+        console.error("Failed to fetch projects from backend:", error);
       } finally {
         setIsLoading(false);
       }
@@ -90,7 +90,6 @@ export default function Projects() {
                 onClick={() => setSelectedProject(project)}
                 className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
               >
-                {/* DIRECT IMAGE LINK */}
                 <img 
                   src={project.imageUrl} 
                   alt={project.title} 
@@ -127,39 +126,46 @@ export default function Projects() {
 
       </div>
 
+      {/* --- REBUILT SLIDE-UP MODAL --- */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-end md:items-center justify-center p-0 md:p-6 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-sm"
             onClick={() => setSelectedProject(null)}
           >
             <motion.div 
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               onClick={(e) => e.stopPropagation()}
-              className="glass-card w-full md:max-w-5xl bg-black border-t md:border border-white/10 rounded-t-[2rem] md:rounded-[2rem] p-6 md:p-10 max-h-[90vh] flex flex-col md:flex-row gap-8 relative overflow-hidden"
+              // PERFECT FLUID LAYOUT: Never exceeds 90vh, uses true Flex row/col
+              className="glass-card w-full max-w-5xl bg-black border border-white/10 rounded-[2rem] flex flex-col md:flex-row overflow-hidden relative max-h-[90vh]"
             >
               
+              {/* ABSOLUTE X BUTTON: Z-index completely above everything */}
               <button 
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 md:top-6 md:right-6 text-white/50 hover:text-white transition-colors bg-white/5 rounded-full p-2 z-20"
+                className="absolute top-4 right-4 md:top-6 md:right-6 text-white hover:text-white transition-colors bg-black/50 backdrop-blur-md border border-white/10 rounded-full p-2 z-50"
               >
                 <X size={24} />
               </button>
 
-              <div className="w-full md:w-[45%] h-[250px] md:h-full md:min-h-[400px] flex-shrink-0">
-                {/* DIRECT IMAGE LINK */}
+              {/* LEFT SIDE: Image */}
+              {/* On mobile: fixed 250px tall. On desktop/tablet: fluid height perfectly matching the text area! */}
+              <div className="w-full md:w-[45%] h-[250px] md:h-auto relative flex-shrink-0 bg-white/5">
                 <img 
                   src={selectedProject.imageUrl} 
                   alt={selectedProject.title} 
-                  className="w-full h-full object-cover rounded-xl border border-white/10"
+                  className="absolute inset-0 w-full h-full object-cover"
                   onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(selectedProject.title)}` }}
                 />
               </div>
 
-              <div className="w-full md:w-[55%] flex flex-col justify-start overflow-y-auto pr-2 md:pr-4 pb-4">
-                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6 pr-8 mt-2">
+              {/* RIGHT SIDE: Details (Independent Scrolling Container) */}
+              <div className="w-full md:w-[55%] flex flex-col overflow-y-auto p-6 md:p-10 pt-10 md:pt-12">
+                
+                {/* pr-12 ensures the text NEVER slides underneath the absolute X button */}
+                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6 pr-12">
                   {selectedProject.title}
                 </h3>
                 
@@ -182,14 +188,14 @@ export default function Projects() {
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-4 mt-auto">
+                <div className="flex flex-wrap gap-4 mt-auto pb-4">
                   {selectedProject.liveUrl && (
-                    <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase bg-white text-black hover:bg-white/80 transition-colors rounded-lg">
+                    <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-5 py-3 text-xs font-semibold tracking-widest uppercase bg-white text-black hover:bg-white/80 transition-colors rounded-lg">
                       <ExternalLink size={16} /> Live Site
                     </a>
                   )}
                   {selectedProject.githubUrl && (
-                    <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase bg-transparent text-white border border-white/20 hover:bg-white/10 transition-colors rounded-lg">
+                    <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-5 py-3 text-xs font-semibold tracking-widest uppercase bg-transparent text-white border border-white/20 hover:bg-white/10 transition-colors rounded-lg">
                       <GitHubLogo /> GitHub
                     </a>
                   )}
