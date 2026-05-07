@@ -16,11 +16,9 @@ export default function Admin() {
   const [activeTab, setActiveTab] = useState<'projects' | 'experience'>('projects');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Data States
   const [projects, setProjects] = useState<Project[]>([]);
   const [experiences, setExperiences] = useState<Experience[]>([]);
 
-  // Form States
   const [projectForm, setProjectForm] = useState({ title: '', description: '', imageUrl: '', tags: '', outcomes: '', liveUrl: '', githubUrl: '' });
   const [expForm, setExpForm] = useState({ role: '', organization: '', dateRange: '', summary: '', responsibilities: '' });
 
@@ -31,11 +29,9 @@ export default function Admin() {
     fetchExperiences();
   }, [navigate]);
 
-  // --- API CALLS ---
-
   const fetchProjects = async () => {
     try {
-      const res = await fetch('/api/projects');
+      const res = await fetch('/api/projects'); // REMOVED LOCALHOST
       setProjects(await res.json());
     } catch (e) { console.error(e); } 
     finally { setIsLoading(false); }
@@ -43,7 +39,7 @@ export default function Admin() {
 
   const fetchExperiences = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/experience');
+      const res = await fetch('/api/experience'); // REMOVED LOCALHOST
       setExperiences(await res.json());
     } catch (e) { console.error(e); }
   };
@@ -57,7 +53,7 @@ export default function Admin() {
       liveUrl: projectForm.liveUrl || null, githubUrl: projectForm.githubUrl || null,
     };
 
-    const res = await fetch('http://localhost:8000/api/projects', {
+    const res = await fetch('/api/projects', { // REMOVED LOCALHOST
       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(newProject)
     });
@@ -74,7 +70,7 @@ export default function Admin() {
       responsibilities: expForm.responsibilities.split('\n').map(res => res.trim()).filter(r => r !== '')
     };
 
-    const res = await fetch('http://localhost:8000/api/experience', {
+    const res = await fetch('/api/experience', { // REMOVED LOCALHOST
       method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(newExp)
     });
@@ -87,7 +83,7 @@ export default function Admin() {
     const token = localStorage.getItem('admin_token');
     if (!window.confirm(`Are you sure you want to delete this ${type.slice(0, -1)}?`)) return;
 
-    const res = await fetch(`http://localhost:8000/api/${type}/${id}`, {
+    const res = await fetch(`/api/${type}/${id}`, { // REMOVED LOCALHOST
       method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
     });
 
