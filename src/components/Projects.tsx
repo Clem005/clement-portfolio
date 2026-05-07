@@ -8,24 +8,12 @@ const GitHubLogo = () => (
   </svg>
 );
 
-// --- THE IMAGE LINK FIXER ---
-// This safely transforms standard Google Drive and GitHub URLs into raw image links
 const formatImageUrl = (url: string) => {
   if (!url) return '';
-  
   try {
-    // 1. Convert Google Drive share links
     const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-    if (driveMatch) {
-      return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
-    }
-    
-    // 2. Convert GitHub blob links to raw user content links
-    if (url.includes('github.com') && url.includes('/blob/')) {
-      return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-    }
-    
-    // If it's already a direct link, just return it
+    if (driveMatch) return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+    if (url.includes('github.com') && url.includes('/blob/')) return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
     return url;
   } catch (e) {
     return url;
@@ -112,10 +100,8 @@ export default function Projects() {
                 key={project.id}
                 variants={itemVariants}
                 onClick={() => setSelectedProject(project)}
-                // Fixed Height Container so it never shrinks or grows weirdly
-                className="group relative h-[400px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
+                className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
               >
-                {/* Process the image URL to fix Drive/GitHub links automatically */}
                 <img 
                   src={formatImageUrl(project.imageUrl)} 
                   alt={project.title} 
@@ -124,26 +110,15 @@ export default function Projects() {
                     e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(project.title)}` 
                   }}
                 />
-                
-                {/* Unbreakable Slide-Up Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* The Unbreakable Text Box */}
-                {/* It sits slightly lower, then slides up to its natural position on hover */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                  
-                  {/* Title */}
                   <h3 className="text-xl md:text-2xl font-serif text-white mb-2 drop-shadow-md">
                     {project.title}
                   </h3>
-                  
-                  {/* The Description & Tags wrapper fades in on hover */}
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                    {/* Strict line clamping guarantees it NEVER pushes past the card height */}
                     <p className="text-[13px] md:text-sm text-white/80 mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed">
                       {project.description}
                     </p>
-                    
                     <div className="flex flex-wrap gap-2">
                       {project.tags.slice(0, 3).map((tag, tagIdx) => (
                         <span key={tagIdx} className="text-[10px] tracking-wider uppercase text-white/90 bg-white/10 border border-white/10 px-2 py-1 rounded">
@@ -152,7 +127,6 @@ export default function Projects() {
                       ))}
                     </div>
                   </div>
-
                 </div>
               </motion.div>
             ))}
@@ -161,7 +135,6 @@ export default function Projects() {
 
       </div>
 
-      {/* Slide-Up Modal */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div 
@@ -173,40 +146,55 @@ export default function Projects() {
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               onClick={(e) => e.stopPropagation()}
-              className="glass-card w-full md:max-w-4xl bg-black border-t md:border border-white/10 rounded-t-[2rem] md:rounded-[2rem] p-8 md:p-12 max-h-[90vh] overflow-y-auto relative flex flex-col md:flex-row gap-8 md:gap-12"
+              // FIXED MODAL LAYOUT: Removed center alignment, added internal scrolling, fixed padding
+              className="glass-card w-full md:max-w-5xl bg-black border-t md:border border-white/10 rounded-t-[2rem] md:rounded-[2rem] p-6 md:p-10 max-h-[90vh] flex flex-col md:flex-row gap-8 relative overflow-hidden"
             >
+              
               <button 
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-6 right-6 md:top-8 md:right-8 text-white/50 hover:text-white transition-colors bg-white/5 rounded-full p-2 z-10"
+                className="absolute top-4 right-4 md:top-6 md:right-6 text-white/50 hover:text-white transition-colors bg-white/5 rounded-full p-2 z-20"
               >
                 <X size={24} />
               </button>
 
-              <div className="w-full md:w-1/2">
+              {/* LEFT SIDE: Image (Anchored and constrained) */}
+              <div className="w-full md:w-[45%] h-[250px] md:h-full md:min-h-[400px] flex-shrink-0">
                 <img 
                   src={formatImageUrl(selectedProject.imageUrl)} 
                   alt={selectedProject.title} 
-                  className="w-full h-[250px] md:h-full object-cover rounded-xl border border-white/10"
+                  className="w-full h-full object-cover rounded-xl border border-white/10"
                   onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(selectedProject.title)}` }}
                 />
               </div>
 
-              <div className="w-full md:w-1/2 flex flex-col justify-center">
-                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6 pr-8">{selectedProject.title}</h3>
-                <p className="text-sm md:text-base text-white/70 font-light leading-relaxed mb-6">{selectedProject.description}</p>
+              {/* RIGHT SIDE: Details (Fixed alignment to START, added scroll overflow) */}
+              <div className="w-full md:w-[55%] flex flex-col justify-start overflow-y-auto pr-2 md:pr-4 pb-4">
+                
+                {/* Title starts exactly at the top now */}
+                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6 pr-8 mt-2">
+                  {selectedProject.title}
+                </h3>
+                
+                <p className="text-sm md:text-base text-white/70 font-light leading-relaxed mb-6">
+                  {selectedProject.description}
+                </p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
                   {selectedProject.tags.map((tag, idx) => (
-                    <span key={idx} className="text-xs tracking-wider uppercase text-white/80 bg-white/10 border border-white/10 px-3 py-1 rounded-full">{tag}</span>
+                    <span key={idx} className="text-xs tracking-wider uppercase text-white/80 bg-white/10 border border-white/10 px-3 py-1 rounded-full">
+                      {tag}
+                    </span>
                   ))}
                 </div>
 
-                <div className="mb-8 p-4 bg-white/5 border border-white/10 rounded-xl">
+                <div className="mb-8 p-5 bg-white/5 border border-white/10 rounded-xl">
                   <h4 className="text-[10px] tracking-widest text-white/50 uppercase mb-2">Key Outcome</h4>
-                  <p className="text-sm text-white/90 font-medium">{selectedProject.outcomes}</p>
+                  <p className="text-sm text-white/90 font-medium leading-relaxed">
+                    {selectedProject.outcomes}
+                  </p>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-4 mt-auto">
                   {selectedProject.liveUrl && (
                     <a href={selectedProject.liveUrl} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold tracking-widest uppercase bg-white text-black hover:bg-white/80 transition-colors rounded-lg">
                       <ExternalLink size={16} /> Live Site
@@ -218,6 +206,7 @@ export default function Projects() {
                     </a>
                   )}
                 </div>
+
               </div>
             </motion.div>
           </motion.div>
