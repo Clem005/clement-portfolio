@@ -8,6 +8,30 @@ const GitHubLogo = () => (
   </svg>
 );
 
+// --- THE IMAGE LINK FIXER ---
+// This safely transforms standard Google Drive and GitHub URLs into raw image links
+const formatImageUrl = (url: string) => {
+  if (!url) return '';
+  
+  try {
+    // 1. Convert Google Drive share links
+    const driveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (driveMatch) {
+      return `https://drive.google.com/uc?export=view&id=${driveMatch[1]}`;
+    }
+    
+    // 2. Convert GitHub blob links to raw user content links
+    if (url.includes('github.com') && url.includes('/blob/')) {
+      return url.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
+    }
+    
+    // If it's already a direct link, just return it
+    return url;
+  } catch (e) {
+    return url;
+  }
+};
+
 interface ProjectType {
   id: string;
   title: string;
@@ -88,46 +112,44 @@ export default function Projects() {
                 key={project.id}
                 variants={itemVariants}
                 onClick={() => setSelectedProject(project)}
-                // Increased base height so text has plenty of room
-                className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
+                // Fixed Height Container so it never shrinks or grows weirdly
+                className="group relative h-[400px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
               >
-                {/* Image with robust fallback */}
+                {/* Process the image URL to fix Drive/GitHub links automatically */}
                 <img 
-                  src={project.imageUrl} 
+                  src={formatImageUrl(project.imageUrl)} 
                   alt={project.title} 
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => { 
-                    // Automatically generate a nice dark placeholder if the URL is broken
                     e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(project.title)}` 
                   }}
                 />
                 
-                {/* Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                {/* Unbreakable Slide-Up Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
                 
-                {/* Text Content Area */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                {/* The Unbreakable Text Box */}
+                {/* It sits slightly lower, then slides up to its natural position on hover */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-out">
                   
-                  {/* Title is always visible */}
-                  <h3 className="text-xl md:text-2xl font-serif text-white mb-1 drop-shadow-md">
+                  {/* Title */}
+                  <h3 className="text-xl md:text-2xl font-serif text-white mb-2 drop-shadow-md">
                     {project.title}
                   </h3>
                   
-                  {/* Flawless CSS Grid trick for animating height from 0 to auto */}
-                  <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-in-out">
-                    <div className="overflow-hidden">
-                      <div className="pt-3">
-                        <p className="text-[13px] md:text-sm text-white/80 mb-4 line-clamp-3 leading-relaxed">
-                          {project.description}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.slice(0, 3).map((tag, tagIdx) => (
-                            <span key={tagIdx} className="text-[10px] tracking-wider uppercase text-white/90 bg-white/10 border border-white/10 px-2 py-1 rounded">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
+                  {/* The Description & Tags wrapper fades in on hover */}
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                    {/* Strict line clamping guarantees it NEVER pushes past the card height */}
+                    <p className="text-[13px] md:text-sm text-white/80 mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed">
+                      {project.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.slice(0, 3).map((tag, tagIdx) => (
+                        <span key={tagIdx} className="text-[10px] tracking-wider uppercase text-white/90 bg-white/10 border border-white/10 px-2 py-1 rounded">
+                          {tag}
+                        </span>
+                      ))}
                     </div>
                   </div>
 
@@ -162,7 +184,7 @@ export default function Projects() {
 
               <div className="w-full md:w-1/2">
                 <img 
-                  src={selectedProject.imageUrl} 
+                  src={formatImageUrl(selectedProject.imageUrl)} 
                   alt={selectedProject.title} 
                   className="w-full h-[250px] md:h-full object-cover rounded-xl border border-white/10"
                   onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(selectedProject.title)}` }}
