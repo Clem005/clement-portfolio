@@ -52,7 +52,7 @@ export default function Projects() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } } // FIXED HERE
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } } 
   };
 
   return (
@@ -70,7 +70,6 @@ export default function Projects() {
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4">
-            {/* FIXED HERE ("linear" as const) */}
             <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" as const }} className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full" />
             <p className="text-white/50 tracking-widest text-xs uppercase">Loading Database...</p>
           </div>
@@ -89,36 +88,58 @@ export default function Projects() {
                 key={project.id}
                 variants={itemVariants}
                 onClick={() => setSelectedProject(project)}
-                className="group relative h-80 md:h-96 w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
+                // Increased base height so text has plenty of room
+                className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
               >
+                {/* Image with robust fallback */}
                 <img 
                   src={project.imageUrl} 
                   alt={project.title} 
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  onError={(e) => { 
+                    // Automatically generate a nice dark placeholder if the URL is broken
+                    e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(project.title)}` 
+                  }}
                 />
-                <div className="absolute inset-0 bg-black/50 group-hover:bg-black/80 transition-colors duration-500 flex flex-col justify-end p-6">
-                  <h3 className="text-xl font-serif text-white mb-2 transform transition-transform duration-500 group-hover:-translate-y-2">
+                
+                {/* Dark Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                {/* Text Content Area */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  
+                  {/* Title is always visible */}
+                  <h3 className="text-xl md:text-2xl font-serif text-white mb-1 drop-shadow-md">
                     {project.title}
                   </h3>
-                  <div className="h-0 overflow-hidden opacity-0 group-hover:h-auto group-hover:opacity-100 transition-all duration-500">
-                    <p className="text-xs text-white/70 mb-4 line-clamp-2">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tags.slice(0, 3).map((tag, tagIdx) => (
-                        <span key={tagIdx} className="text-[10px] tracking-wider uppercase text-white/50 bg-white/10 px-2 py-1 rounded">
-                          {tag}
-                        </span>
-                      ))}
+                  
+                  {/* Flawless CSS Grid trick for animating height from 0 to auto */}
+                  <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-in-out">
+                    <div className="overflow-hidden">
+                      <div className="pt-3">
+                        <p className="text-[13px] md:text-sm text-white/80 mb-4 line-clamp-3 leading-relaxed">
+                          {project.description}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.tags.slice(0, 3).map((tag, tagIdx) => (
+                            <span key={tagIdx} className="text-[10px] tracking-wider uppercase text-white/90 bg-white/10 border border-white/10 px-2 py-1 rounded">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
+
                 </div>
               </motion.div>
             ))}
           </motion.div>
         )}
+
       </div>
 
+      {/* Slide-Up Modal */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div 
@@ -140,7 +161,12 @@ export default function Projects() {
               </button>
 
               <div className="w-full md:w-1/2">
-                <img src={selectedProject.imageUrl} alt={selectedProject.title} className="w-full h-[250px] md:h-full object-cover rounded-xl border border-white/10" />
+                <img 
+                  src={selectedProject.imageUrl} 
+                  alt={selectedProject.title} 
+                  className="w-full h-[250px] md:h-full object-cover rounded-xl border border-white/10"
+                  onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${encodeURIComponent(selectedProject.title)}` }}
+                />
               </div>
 
               <div className="w-full md:w-1/2 flex flex-col justify-center">
@@ -171,7 +197,6 @@ export default function Projects() {
                   )}
                 </div>
               </div>
-
             </motion.div>
           </motion.div>
         )}
