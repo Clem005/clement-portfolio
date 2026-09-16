@@ -1,83 +1,129 @@
 import { motion } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 
-const timelineData = [
-  { year: "1 March", text: "Born in Johannesburg, South Africa" },
-  { year: "2010", text: "Started primary school at Sir Edmund Hillary Primary School" },
-  { year: "2018", text: "Earned my place at Jeppe High School for Boys" },
-  { year: "2020", text: "Wrote my first line of code and never looked back" },
-  { year: "2021", text: "Took gold at a public speaking competition" },
-  { year: "2022", text: "Matriculated from Jeppe High School for Boys" },
-  { year: "2023", text: "Moved to Cape Town" },
-  { year: "2023", text: "Began my BCom in Information Systems at UWC" },
-  { year: "2024", text: "Landed my first client and built an ecommerce store using WordPress" },
-  { year: "2025", text: "Delivered my first full stack project" },
-  { year: "2025", text: "Built an n8n automation and ERP system for a client" },
-  { year: "2025", text: "Completed my BCom in Information Systems" },
-  { year: "2026", text: "Completed my BCom Honours in Information Systems" },
-  { year: "2026", text: "Stepped into the world as an IT Professional" },
+const venturesData = [
+  {
+    id: "verplex",
+    title: "Verplex Solutions",
+    subtitle: "Tech Consultancy Firm",
+    description: "At Verplex Solutions, we operate as a strategic technology partner for businesses looking to scale. Rather than just writing code, we architect end-to-end digital solutions—from enterprise automation to complex web infrastructure. Our primary focus is on eliminating operational bottlenecks and delivering custom software that drives measurable ROI and long-term efficiency.",
+    link: null, // Add link here later if Verplex gets a website
+    frontImage: "/verplex-front.jpg",
+    backImage: "/verplex-back.jpg",
+  },
+  {
+    id: "gradxp",
+    title: "Grad XP",
+    subtitle: "Freelancer Platform",
+    description: "Grad XP bridges the gap between top-tier emerging talent and businesses in need of specialized technical execution. As a platform, it empowers skilled freelancers to deliver high-impact projects—ranging from custom AI integrations to full-stack web development—while providing clients with a reliable pipeline of vetted, project-ready professionals.",
+    link: "https://gradxp.co.za",
+    frontImage: "/gradxp-front.jpg",
+    backImage: "/gradxp-back.jpg",
+  }
 ];
 
 export default function Journey() {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
+  };
+
+  // Dual Image Hover Animations
+  const backImageVariants = {
+    hidden: { opacity: 0.7, x: 0, y: 0, rotate: -6, scale: 1 },
+    hover: { opacity: 1, x: "-10%", y: "-5%", rotate: -10, scale: 1.05, transition: { duration: 0.5, ease: "easeOut" as const } }
+  };
+
+  const frontImageVariants = {
+    hidden: { opacity: 1, x: 0, y: 0, rotate: 4 },
+    hover: { x: "10%", y: "5%", rotate: 8, transition: { duration: 0.5, ease: "easeOut" as const } }
+  };
+
   return (
-    <section id="journey" className="w-full py-24 bg-black flex flex-col items-center px-6 md:px-8 overflow-hidden">
+    <section id="journey" className="w-full py-24 bg-black flex flex-col items-center px-4 md:px-8 overflow-hidden">
       
       <motion.h2 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut" as const }} // FIXED HERE
-        className="text-4xl md:text-5xl font-serif text-white mb-16 text-center tracking-wide"
+        transition={{ duration: 0.8, ease: "easeOut" as const }}
+        className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
       >
-        My Timeline
+        Professional Ventures
       </motion.h2>
 
-      <div className="relative max-w-5xl w-full">
-        
-        {/* The Central Vertical Line */}
-        <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent -translate-x-1/2"></div>
+      <div className="max-w-[1200px] w-full flex flex-col gap-12 lg:gap-16">
+        {venturesData.map((item, index) => {
+          // Alternate image left/right on desktop
+          const isEven = index % 2 === 0;
 
-        <div className="flex flex-col gap-8 md:gap-0">
-          {timelineData.map((item, index) => {
-            const isEven = index % 2 === 0;
+          return (
+            <motion.div 
+              key={item.id}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className={`glass-card w-full rounded-2xl md:rounded-[2rem] p-8 md:p-12 lg:p-16 flex flex-col gap-10 lg:gap-16 group cursor-pointer ${
+                isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
+              }`}
+            >
+              
+              {/* TEXT SIDE */}
+              <div className="flex-1 flex flex-col justify-center w-full z-10">
+                <h4 className="text-[10px] md:text-xs tracking-[0.2em] text-white/50 uppercase mb-3">
+                  {item.subtitle}
+                </h4>
+                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6">
+                  {item.title}
+                </h3>
+                <p className="text-sm md:text-base text-white/70 leading-relaxed font-light mb-8">
+                  {item.description}
+                </p>
 
-            return (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20, x: isEven ? -15 : 15 }}
-                whileInView={{ opacity: 1, y: 0, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, ease: "easeOut" as const }} // FIXED HERE
-                className={`relative flex flex-col md:flex-row items-start md:items-center w-full md:py-3 ${
-                  isEven ? 'md:justify-start' : 'md:justify-end'
-                }`}
-              >
-                
-                {/* The Timeline Dot */}
-                <div className="absolute left-[20px] md:left-1/2 w-2.5 h-2.5 bg-white rounded-full -translate-x-1/2 mt-3 md:mt-0 shadow-[0_0_12px_rgba(255,255,255,0.8)] z-10"></div>
-
-                {/* Content Box */}
-                <div 
-                  className={`w-full md:w-[46%] pl-10 md:pl-0 ${
-                    isEven ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'
-                  }`}
-                >
-                  <div className={`glass-card p-5 md:p-6 rounded-2xl flex flex-col transition-transform duration-300 hover:scale-[1.02] hover:border-white/20 ${
-                    isEven ? 'md:items-end' : 'md:items-start'
-                  }`}>
-                    <span className="text-xl md:text-2xl font-serif text-white mb-2 tracking-widest">
-                      {item.year}
-                    </span>
-                    <p className="text-[13px] md:text-sm text-white/70 font-light leading-relaxed">
-                      {item.text}
-                    </p>
+                {item.link && (
+                  <div>
+                    <a 
+                      href={item.link} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold tracking-widest uppercase bg-white/10 text-white border border-white/20 hover:bg-white hover:text-black transition-colors rounded-lg"
+                    >
+                      <ExternalLink size={16} /> Visit Website
+                    </a>
                   </div>
-                </div>
+                )}
+              </div>
 
+              {/* IMAGE SIDE (Interactive Dual Images) */}
+              <motion.div 
+                initial="hidden"
+                animate="hidden"
+                whileHover="hover"
+                className="flex-1 w-full h-[350px] md:h-[400px] lg:h-[450px] relative z-10 mt-2 lg:mt-0"
+              >
+                {/* Back Image */}
+                <motion.img 
+                  variants={backImageVariants}
+                  src={item.backImage}
+                  alt={`${item.title} background`}
+                  className="absolute top-[10%] right-[15%] md:right-[20%] w-[65%] h-[80%] object-cover rounded-xl border border-white/10 shadow-2xl"
+                  onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${item.title}+1` }}
+                />
+
+                {/* Front Image */}
+                <motion.img 
+                  variants={frontImageVariants}
+                  src={item.frontImage}
+                  alt={`${item.title} foreground`}
+                  className="absolute top-[5%] right-0 md:right-[5%] w-[70%] h-[90%] object-cover rounded-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.7)] z-10"
+                  onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${item.title}+2` }}
+                />
               </motion.div>
-            );
-          })}
-        </div>
 
+            </motion.div>
+          );
+        })}
       </div>
 
     </section>
