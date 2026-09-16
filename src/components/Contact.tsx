@@ -67,6 +67,7 @@ export default function Contact() {
         className="max-w-6xl w-full flex flex-col md:flex-row gap-16 md:gap-24"
       >
         
+        {/* LEFT SIDE: Text & Socials */}
         <div className="flex-1 flex flex-col">
           <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-serif text-white mb-6">
             Let's Connect
@@ -84,14 +85,14 @@ export default function Contact() {
               <Mail size={20} />
             </a>
             <a 
-              href="https://linkedin.com/in/clementibeneche"
+              href="https://www.linkedin.com/in/clement-ibeneche-ccti"
               target="_blank" rel="noreferrer"
               className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#0A66C2]/20 hover:border-[#0A66C2] transition-all duration-300"
             >
               <LinkedInLogo />
             </a>
             <a 
-              href="https://github.com/clementibeneche"
+              href="https://github.com/Clem005"
               target="_blank" rel="noreferrer"
               className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
             >
@@ -100,15 +101,14 @@ export default function Contact() {
           </motion.div>
         </div>
 
+        {/* RIGHT SIDE: Contact Form */}
         <motion.div variants={itemVariants} className="flex-1 w-full">
           <form onSubmit={handleSubmit} className="glass-card p-8 md:p-10 rounded-[2rem] flex flex-col gap-6 relative overflow-hidden">
             
             <AnimatePresence>
               {isSuccess && (
                 <motion.div 
-                  initial={{ opacity: 0 }} 
-                  animate={{ opacity: 1 }} 
-                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   transition={{ duration: 0.3, ease: "easeOut" as const }}
                   className="absolute inset-0 bg-black/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center text-center p-8 rounded-[2rem]"
                 >
