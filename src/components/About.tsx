@@ -75,7 +75,7 @@ export default function About() {
             </motion.p>
 
             <motion.p variants={textVariants} className="text-white/90 font-medium mt-4">
-              I'm Clement Ibeneche. Armed with a BCom Honours in Information Systems, I sit comfortably at the intersection of business strategy and software development. I am a creative problem-solver driven by one core philosophy: build technology that drives tangible, real-world impact.
+              I'm Clement Ibeneche. I sit comfortably at the intersection of business strategy and software development. I am a creative problem-solver driven by one core philosophy: build technology that drives tangible, real-world impact.
             </motion.p>
           </div>
         </motion.div>
@@ -97,7 +97,7 @@ export default function About() {
           />
           <motion.img 
             variants={frontImageVariants}
-            src="/about-front.jpg" 
+            src="/about-front.jpeg" 
             alt="Development & Execution"
             className="absolute top-[5%] right-0 w-[75%] h-[85%] object-cover rounded-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.7)] z-10"
             onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop' }}

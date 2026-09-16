@@ -74,7 +74,7 @@ export default function Contact() {
           </motion.h2>
           
           <motion.p variants={itemVariants} className="text-sm md:text-base text-white/70 font-light leading-relaxed mb-12 max-w-md">
-            Whether you have a project in mind, need a custom automation solution, or just want to discuss the intersection of business and technology—my inbox is always open.
+            Whether you have a project in mind, need a custom automation solution, or just want to discuss the intersection of business and technology, my inbox is always open.
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex gap-4">
