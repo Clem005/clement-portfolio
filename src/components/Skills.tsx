@@ -7,6 +7,7 @@ import {
   MessageSquare, 
   Handshake 
 } from 'lucide-react';
+import { revealGroup, revealItem, useReveal } from '../lib/motion';
 
 const technicalSkills = [
   // ROW 1: The Core Web/Code (5 items)
@@ -41,51 +42,38 @@ const professionalSkills = [
 ];
 
 export default function Skills() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } } 
-  };
+  const reveal = useReveal();
 
   return (
     <section id="skills" className="w-full py-32 bg-black flex flex-col items-center overflow-hidden">
       <div className="max-w-6xl w-full px-6 flex flex-col items-center">
         
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" as const }} 
+        <motion.h1
+          variants={revealItem}
+          {...reveal}
           className="text-5xl md:text-6xl font-serif text-white mb-20 text-center tracking-wide"
         >
           Skills & Expertise
         </motion.h1>
 
         <div className="w-full flex flex-col items-center mb-32">
-          <motion.h2 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+          <motion.h2
+            variants={revealItem}
+            {...reveal}
             className="text-xl font-serif text-white mb-12"
           >
             Technical Skills
           </motion.h2>
 
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+          <motion.div
+            variants={revealGroup}
+            {...reveal}
             className="flex flex-wrap justify-center gap-x-12 gap-y-12 max-w-[800px]"
           >
             {technicalSkills.map((skill, idx) => (
               <motion.div 
-                key={idx} 
-                variants={itemVariants}
+                key={idx}
+                variants={revealItem}
                 className="flex flex-col items-center gap-4 cursor-pointer group w-[25%] md:w-[15%]"
               >
                 <img 
@@ -102,20 +90,17 @@ export default function Skills() {
         </div>
 
         <div className="w-full flex flex-col items-center">
-          <motion.h2 
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
+          <motion.h2
+            variants={revealItem}
+            {...reveal}
             className="text-xl font-serif text-white mb-12"
           >
             Professional Skills
           </motion.h2>
 
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
+          <motion.div
+            variants={revealGroup}
+            {...reveal}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full"
           >
             {professionalSkills.map((skill, idx) => {
@@ -123,7 +108,7 @@ export default function Skills() {
               return (
                 <motion.div 
                   key={idx}
-                  variants={itemVariants}
+                  variants={revealItem}
                   className="glass-card flex items-center gap-5 p-5 rounded-xl cursor-pointer hover:border-white/30 transition-colors duration-300"
                 >
                   <div className="w-12 h-12 flex-shrink-0 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors duration-300">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Send, CheckCircle2 } from 'lucide-react';
+import { revealGroup, revealItem, useReveal } from '../lib/motion';
 
 const GitHubLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -20,6 +21,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const reveal = useReveal();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,37 +49,25 @@ export default function Contact() {
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } }
-  };
-
   return (
     <section id="contact" className="w-full py-32 bg-black flex justify-center px-4 md:px-8 border-t border-white/5">
       <motion.div 
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        variants={revealGroup}
+        {...reveal}
         className="max-w-6xl w-full flex flex-col md:flex-row gap-16 md:gap-24"
       >
         
         {/* LEFT SIDE: Text & Socials */}
         <div className="flex-1 flex flex-col">
-          <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-serif text-white mb-6">
+          <motion.h2 variants={revealItem} className="text-4xl md:text-5xl font-serif text-white mb-6">
             Let's Connect
           </motion.h2>
           
-          <motion.p variants={itemVariants} className="text-sm md:text-base text-white/70 font-light leading-relaxed mb-12 max-w-md">
+          <motion.p variants={revealItem} className="text-sm md:text-base text-white/70 font-light leading-relaxed mb-12 max-w-md">
             Whether you have a project in mind, need a custom automation solution, or just want to discuss the intersection of business and technology, my inbox is always open.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="flex gap-4">
+          <motion.div variants={revealItem} className="flex gap-4">
             <a 
               href="mailto:clemchuksthabo@gmail.com" 
               className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300"
@@ -102,7 +92,7 @@ export default function Contact() {
         </div>
 
         {/* RIGHT SIDE: Contact Form */}
-        <motion.div variants={itemVariants} className="flex-1 w-full">
+        <motion.div variants={revealItem} className="flex-1 w-full">
           <form onSubmit={handleSubmit} className="glass-card p-8 md:p-10 rounded-[2rem] flex flex-col gap-6 relative overflow-hidden">
             
             <AnimatePresence>

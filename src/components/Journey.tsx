@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import { revealItem, useReveal } from '../lib/motion';
 
 const venturesData = [
   {
@@ -14,9 +15,9 @@ const venturesData = [
   },
   {
     id: "gradxp",
-    title: "Grad XP",
+    title: "GradXP",
     subtitle: "Freelancer Platform",
-    description: "Grad XP bridges the gap between top-tier emerging talent and businesses in need of specialized technical execution. As a platform, it empowers skilled freelancers to deliver high-impact projects—ranging from custom AI integrations to full-stack web development—while providing clients with a reliable pipeline of vetted, project-ready professionals.",
+    description: "GradXP bridges the gap between top-tier emerging talent and businesses in need of specialized technical execution. As a platform, it empowers skilled freelancers to deliver high-impact projects—ranging from custom AI integrations to full-stack web development—while providing clients with a reliable pipeline of vetted, project-ready professionals.",
     link: "https://gradxp.co.za",
     frontImage: "/gradxp-front.jpg",
     backImage: "/gradxp-back.jpg",
@@ -58,10 +59,7 @@ function VentureImage({ src, alt, label, variants, className }: {
 }
 
 export default function Journey() {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
-  };
+  const reveal = useReveal();
 
   // Dual Image Hover Animations
   const backImageVariants = {
@@ -77,11 +75,9 @@ export default function Journey() {
   return (
     <section id="journey" className="w-full py-24 bg-black flex flex-col items-center px-4 md:px-8 overflow-hidden">
       
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut" as const }}
+      <motion.h2
+        variants={revealItem}
+        {...reveal}
         className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
       >
         Professional Ventures
@@ -95,10 +91,8 @@ export default function Journey() {
           return (
             <motion.div 
               key={item.id}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
+              variants={revealItem}
+              {...reveal}
               className={`glass-card w-full rounded-2xl md:rounded-[2rem] p-8 md:p-12 lg:p-16 flex flex-col gap-10 lg:gap-16 group cursor-pointer ${
                 isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
               }`}

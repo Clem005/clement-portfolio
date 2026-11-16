@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';
+import { revealItem, useReveal } from '../lib/motion';
+import { tidyText } from '../lib/text';
 
 const GitHubLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -23,13 +25,21 @@ export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(null);
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const reveal = useReveal();
 
   useEffect(() => {
     const fetchLiveProjects = async () => {
       try {
         const res = await fetch('/api/projects');
-        const data = await res.json();
-        setProjects(data);
+        const data: ProjectType[] = await res.json();
+        // Tidy stray spacing from the database (wording unchanged).
+        setProjects(data.map((project) => ({
+          ...project,
+          title: tidyText(project.title),
+          description: tidyText(project.description),
+          outcomes: tidyText(project.outcomes),
+          tags: (project.tags ?? []).map(tidyText),
+        })));
       } catch (error) {
         console.error("Failed to fetch projects from backend:", error);
       } finally {
@@ -45,24 +55,14 @@ export default function Projects() {
     return () => { document.body.style.overflow = 'unset'; }
   }, [selectedProject]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } } 
-  };
 
   return (
     <section id="projects" className="w-full py-32 bg-black flex justify-center px-4 md:px-8">
       <div className="max-w-6xl w-full flex flex-col items-center">
         
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <motion.h2
+          variants={revealItem}
+          {...reveal}
           className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
         >
           Selected Projects
@@ -76,17 +76,13 @@ export default function Projects() {
         ) : projects.length === 0 ? (
           <p className="text-white/30 text-sm py-20">No projects found. Add some from the Admin Panel!</p>
         ) : (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "0px" }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
-          >
-            {projects.map((project) => (
-              <motion.div 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {projects.map((project, idx) => (
+              <motion.div
                 key={project.id}
-                variants={itemVariants}
+                variants={revealItem}
+                {...reveal}
+                custom={idx % 3} // stagger cards that share a row
                 onClick={() => setSelectedProject(project)}
                 className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
               >
@@ -121,7 +117,7 @@ export default function Projects() {
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         )}
 
       </div>

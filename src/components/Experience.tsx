@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowUpRight } from 'lucide-react';
+import { revealItem, useReveal } from '../lib/motion';
+import { byMostRecent, tidyText } from '../lib/text';
 
 interface ExperienceType {
   id: string;
@@ -15,13 +17,23 @@ export default function Experience() {
   const [selectedExp, setSelectedExp] = useState<ExperienceType | null>(null);
   const [experiences, setExperiences] = useState<ExperienceType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const reveal = useReveal();
 
   useEffect(() => {
     const fetchLiveExperiences = async () => {
       try {
         const res = await fetch('/api/experience');
-        const data = await res.json();
-        setExperiences(data);
+        const data: ExperienceType[] = await res.json();
+        // Tidy stray spacing from the database, then show the most recent roles first.
+        const cleaned = data.map((exp) => ({
+          ...exp,
+          role: tidyText(exp.role),
+          organization: tidyText(exp.organization),
+          dateRange: tidyText(exp.dateRange),
+          summary: tidyText(exp.summary),
+          responsibilities: (exp.responsibilities ?? []).map(tidyText),
+        }));
+        setExperiences(cleaned.sort(byMostRecent));
       } catch (error) {
         console.error("Failed to fetch experience:", error);
       } finally {
@@ -41,11 +53,9 @@ export default function Experience() {
     <section id="experience" className="w-full py-32 bg-black flex justify-center px-4 md:px-8">
       <div className="max-w-6xl w-full flex flex-col items-center">
         
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" as const }} // FIXED HERE
+        <motion.h2
+          variants={revealItem}
+          {...reveal}
           className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
         >
           Experience
@@ -62,14 +72,13 @@ export default function Experience() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
             {experiences.map((exp, idx) => (
-              <motion.div 
+              <motion.div
                 key={exp.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: idx * 0.1, ease: "easeOut" as const }} // FIXED HERE
+                variants={revealItem}
+                {...reveal}
+                custom={idx % 2} // stagger the two cards that share a row
                 onClick={() => setSelectedExp(exp)}
-                className="glass-card p-8 rounded-2xl cursor-pointer group hover:border-white/20 transition-all duration-300 relative overflow-hidden flex flex-col justify-between min-h-[220px]"
+                className="glass-card p-8 rounded-2xl cursor-pointer group hover:border-white/20 transition-colors duration-300 relative overflow-hidden flex flex-col justify-between min-h-[220px]"
               >
                 <div>
                   <div className="flex justify-between items-start mb-4">
