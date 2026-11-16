@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, type Variants } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 
 const venturesData = [
@@ -21,6 +22,40 @@ const venturesData = [
     backImage: "/gradxp-back.jpg",
   }
 ];
+
+// Venture photo that degrades to a plain on-brand panel when the file is missing,
+// keeping the same footprint (no layout shift, no third-party placeholder request).
+function VentureImage({ src, alt, label, variants, className }: {
+  src: string;
+  alt: string;
+  label: string;
+  variants: Variants;
+  className: string;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <motion.div
+        variants={variants}
+        aria-hidden="true"
+        className={`${className} bg-neutral-950 flex items-center justify-center p-6 text-center`}
+      >
+        <span className="font-serif text-xl md:text-2xl tracking-wide text-white/25">{label}</span>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.img
+      variants={variants}
+      src={src}
+      alt={alt}
+      className={className}
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 export default function Journey() {
   const cardVariants = {
@@ -100,24 +135,24 @@ export default function Journey() {
                 initial="hidden"
                 animate="hidden"
                 whileHover="hover"
-                className="flex-1 w-full h-[350px] md:h-[400px] lg:h-[450px] relative z-10 mt-2 lg:mt-0"
+                className="flex-none lg:flex-1 w-full h-[350px] md:h-[400px] lg:h-[450px] relative z-10 mt-2 lg:mt-0"
               >
                 {/* Back Image */}
-                <motion.img 
+                <VentureImage
                   variants={backImageVariants}
                   src={item.backImage}
                   alt={`${item.title} background`}
+                  label={item.title}
                   className="absolute top-[10%] right-[15%] md:right-[20%] w-[65%] h-[80%] object-cover rounded-xl border border-white/10 shadow-2xl"
-                  onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${item.title}+1` }}
                 />
 
                 {/* Front Image */}
-                <motion.img 
+                <VentureImage
                   variants={frontImageVariants}
                   src={item.frontImage}
                   alt={`${item.title} foreground`}
+                  label={item.title}
                   className="absolute top-[5%] right-0 md:right-[5%] w-[70%] h-[90%] object-cover rounded-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.7)] z-10"
-                  onError={(e) => { e.currentTarget.src = `https://placehold.co/600x800/111111/ffffff?text=${item.title}+2` }}
                 />
               </motion.div>
 

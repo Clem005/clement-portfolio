@@ -86,7 +86,7 @@ export default function About() {
           whileInView="visible"
           whileHover="hover"
           viewport={{ once: true }}
-          className="flex-1 w-full h-[500px] lg:h-[550px] relative z-10 mt-12 lg:mt-0 cursor-pointer"
+          className="flex-none lg:flex-1 w-full h-[500px] lg:h-[550px] relative z-10 mt-12 lg:mt-0 cursor-pointer"
         >
           <motion.img 
             variants={backImageVariants}

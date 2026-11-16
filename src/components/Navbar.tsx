@@ -2,8 +2,15 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import AdminLoginModal from './AdminLoginModal';
+import ViewToggle from './ViewToggle';
+import { CV_FILENAME, CV_URL, type View } from '../lib/view';
 
-export default function Navbar() {
+interface NavbarProps {
+  view: View;
+  onViewChange: (view: View) => void;
+}
+
+export default function Navbar({ view, onViewChange }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -88,6 +95,31 @@ export default function Navbar() {
                 </motion.a>
               ))}
             </div>
+
+            {/* Small audience switch (and CV link when in the CV view) */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 + (navLinks.length * 0.1), duration: 0.5 }}
+              className="absolute bottom-10 inset-x-0 flex flex-col items-center gap-3"
+            >
+              <ViewToggle
+                view={view}
+                onChange={(next) => {
+                  setIsOpen(false);
+                  onViewChange(next);
+                }}
+              />
+              {view === 'cv' && (
+                <a
+                  href={CV_URL}
+                  download={CV_FILENAME}
+                  className="text-xs tracking-widest uppercase text-white/40 hover:text-white transition-colors duration-300 py-2 rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                >
+                  Download CV
+                </a>
+              )}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
