@@ -37,7 +37,7 @@ export default function AdminLoginModal({ isOpen, onClose }: Props) {
       } else {
         setError(data.detail || 'Invalid credentials');
       }
-    } catch (err) {
+    } catch {
       setError('Server error. Is the backend running?');
     } finally {
       setIsLoading(false);

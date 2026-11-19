@@ -1,73 +1,37 @@
-# React + TypeScript + Vite
+# clement.digital
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal site for Clement Ibeneche, built for two audiences: businesses looking for services, and recruiters reading it as a CV.
 
-Currently, two official plugins are available:
+**Stack:** React 19, TypeScript, Vite, Tailwind CSS v4, framer-motion. A FastAPI backend in `api/` (Firestore and Resend) serves projects, experience and the contact form. Hosted on Vercel.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Run locally
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev                                         # expects the API on http://127.0.0.1:8000
+API_TARGET=https://clement.digital npm run dev      # or use the live API's data instead
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+`API_TARGET` only changes where the dev server sends `/api` requests. With it set, the contact form and admin panel act on production data.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Other scripts: `npm run build`, `npm run lint`, `npm run preview`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## How the page works
+
+- **Audience views.** After the hero, visitors choose "I'm looking for services" or "I'm hiring", and the sections are reordered for them. The orders are set in `viewOrder` in `src/App.tsx`. The choice is remembered in `localStorage`. The links `?view=business` and `?view=cv` open a view directly and can be shared.
+- **Content.** Projects and experience come from the API and are managed in the admin panel at `/admin`. The panel can only add and delete entries, not edit them, so to change one, delete it and add it again. Experience is shown newest first. Stray spaces before punctuation are tidied when the text is displayed (`src/lib/text.ts`).
+- **Motion.** Scroll-in reveals live in `src/lib/motion.ts`. Section depth, parallax and cursor tilt are in `src/index.css`, with `DepthSection` and `TiltCard` in `src/components/`. All motion switches off with the visitor's reduced-motion setting.
+
+## Assets in `public/`
+
+| File | Used for |
+|---|---|
+| `image2.png` to `image8.png`, `invoice-app.png` | Project covers. The file names must match each project's image URL in the database. |
+| `verplex-*.jpg`, `gradxp-*.jpg` | Venture images (front and back) |
+| `about-front.jpeg`, `about-back.jpg` | The Approach |
+| `cv.pdf` | "Download CV" button (saved as `Clement-Ibeneche-CV.pdf`) |
+| `og-image.png`, `favicon.png`, `apple-touch-icon.png` | Share preview and icons |
+
+## Deploy
+
+Every push to `main` builds and deploys on Vercel. The `clement.digital` domain must be assigned to this Vercel project for those deploys to go live.

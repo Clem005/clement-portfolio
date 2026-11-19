@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';
 import { revealItem, useReveal } from '../lib/motion';
 import { tidyText } from '../lib/text';
+import TiltCard from './TiltCard';
 
 const GitHubLogo = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -55,15 +57,23 @@ export default function Projects() {
     return () => { document.body.style.overflow = 'unset'; }
   }, [selectedProject]);
 
+  // Close the details panel with Escape
+  useEffect(() => {
+    if (!selectedProject) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedProject(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selectedProject]);
+
 
   return (
-    <section id="projects" className="w-full py-32 bg-black flex justify-center px-4 md:px-8">
+    <section id="projects" className="w-full py-20 lg:py-32 bg-black flex justify-center px-4 md:px-8">
       <div className="max-w-6xl w-full flex flex-col items-center">
         
         <motion.h2
           variants={revealItem}
           {...reveal}
-          className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
+          className="text-4xl md:text-5xl font-serif text-white mb-12 lg:mb-20 text-center tracking-wide"
         >
           Selected Projects
         </motion.h2>
@@ -83,8 +93,14 @@ export default function Projects() {
                 variants={revealItem}
                 {...reveal}
                 custom={idx % 3} // stagger cards that share a row
+              >
+              <TiltCard
+                role="button"
+                tabIndex={0}
+                aria-label={`${project.title}. View project details`}
                 onClick={() => setSelectedProject(project)}
-                className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10"
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedProject(project); } }}
+                className="group relative h-[400px] md:h-[450px] w-full rounded-2xl overflow-hidden cursor-pointer bg-white/5 border border-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 <img 
                   src={project.imageUrl} 
@@ -95,14 +111,14 @@ export default function Projects() {
                   }}
                 />
                 
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-60 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500" />
                 
-                <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end translate-y-12 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                <div className="absolute bottom-0 left-0 right-0 p-6 flex flex-col justify-end translate-y-12 group-hover:translate-y-0 group-focus-visible:translate-y-0 transition-transform duration-500 ease-out">
                   <h3 className="text-xl md:text-2xl font-serif text-white mb-2 drop-shadow-md">
                     {project.title}
                   </h3>
                   
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                  <div className="opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500 delay-100">
                     <p className="text-[13px] md:text-sm text-white/80 mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed">
                       {project.description}
                     </p>
@@ -115,6 +131,7 @@ export default function Projects() {
                     </div>
                   </div>
                 </div>
+              </TiltCard>
               </motion.div>
             ))}
           </div>
@@ -123,7 +140,8 @@ export default function Projects() {
       </div>
 
       {/* --- REBUILT SLIDE-UP MODAL --- */}
-      <AnimatePresence>
+      {/* Rendered at the page root so the section's 3D transform can't affect its fixed positioning */}
+      {createPortal(<AnimatePresence>
         {selectedProject && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -141,6 +159,7 @@ export default function Projects() {
               {/* ABSOLUTE X BUTTON: Z-index completely above everything */}
               <button 
                 onClick={() => setSelectedProject(null)}
+                aria-label="Close"
                 className="absolute top-4 right-4 md:top-6 md:right-6 text-white hover:text-white transition-colors bg-black/50 backdrop-blur-md border border-white/10 rounded-full p-2 z-50"
               >
                 <X size={24} />
@@ -201,7 +220,7 @@ export default function Projects() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </section>
   );
 }

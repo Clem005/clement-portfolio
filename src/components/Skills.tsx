@@ -45,18 +45,18 @@ export default function Skills() {
   const reveal = useReveal();
 
   return (
-    <section id="skills" className="w-full py-32 bg-black flex flex-col items-center overflow-hidden">
+    <section id="skills" className="w-full py-20 lg:py-32 bg-black flex flex-col items-center overflow-hidden">
       <div className="max-w-6xl w-full px-6 flex flex-col items-center">
         
         <motion.h1
           variants={revealItem}
           {...reveal}
-          className="text-5xl md:text-6xl font-serif text-white mb-20 text-center tracking-wide"
+          className="text-5xl md:text-6xl font-serif text-white mb-12 lg:mb-20 text-center tracking-wide"
         >
           Skills & Expertise
         </motion.h1>
 
-        <div className="w-full flex flex-col items-center mb-32">
+        <div className="w-full flex flex-col items-center mb-20 lg:mb-32">
           <motion.h2
             variants={revealItem}
             {...reveal}
@@ -68,7 +68,7 @@ export default function Skills() {
           <motion.div
             variants={revealGroup}
             {...reveal}
-            className="flex flex-wrap justify-center gap-x-12 gap-y-12 max-w-[800px]"
+            className="flex flex-wrap justify-center gap-x-6 gap-y-10 sm:gap-x-12 sm:gap-y-12 max-w-[800px]"
           >
             {technicalSkills.map((skill, idx) => (
               <motion.div 

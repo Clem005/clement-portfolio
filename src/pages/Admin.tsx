@@ -22,13 +22,6 @@ export default function Admin() {
   const [projectForm, setProjectForm] = useState({ title: '', description: '', imageUrl: '', tags: '', outcomes: '', liveUrl: '', githubUrl: '' });
   const [expForm, setExpForm] = useState({ role: '', organization: '', dateRange: '', summary: '', responsibilities: '' });
 
-  useEffect(() => {
-    const token = localStorage.getItem('admin_token');
-    if (!token) { navigate('/'); return; }
-    fetchProjects();
-    fetchExperiences();
-  }, [navigate]);
-
   const fetchProjects = async () => {
     try {
       const res = await fetch('/api/projects'); // REMOVED LOCALHOST
@@ -43,6 +36,14 @@ export default function Admin() {
       setExperiences(await res.json());
     } catch (e) { console.error(e); }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('admin_token');
+    if (!token) { navigate('/'); return; }
+    // Initial load runs asynchronously, so state is only set once the requests return
+    const loadAll = async () => { await Promise.all([fetchProjects(), fetchExperiences()]); };
+    loadAll();
+  }, [navigate]);
 
   const handleAddProject = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +88,10 @@ export default function Admin() {
       method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    if (res.ok) { type === 'projects' ? fetchProjects() : fetchExperiences(); }
+    if (res.ok) {
+      if (type === 'projects') fetchProjects();
+      else fetchExperiences();
+    }
     else alert(`Failed to delete ${type.slice(0, -1)}.`);
   };
 

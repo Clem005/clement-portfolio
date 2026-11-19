@@ -53,7 +53,10 @@ export default function Navbar({ view, onViewChange }: NavbarProps) {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-white hover:text-white/70 transition-transform duration-300 hover:scale-110 z-50"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
+            // p-2.5 / -m-2.5 gives a 44px touch target without moving the icon
+            className="p-2.5 -m-2.5 text-white hover:text-white/70 transition-transform duration-300 hover:scale-110 z-50"
           >
             {isOpen ? <X size={24} strokeWidth={1} /> : <Menu size={24} strokeWidth={1} />}
           </button>
@@ -78,7 +81,7 @@ export default function Navbar({ view, onViewChange }: NavbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 w-full h-screen bg-black/95 backdrop-blur-xl z-40 flex flex-col justify-center items-center"
+            className="fixed inset-0 w-full h-dvh bg-black/95 backdrop-blur-xl z-[45] flex flex-col justify-center items-center"
           >
             <div className="flex flex-col items-center gap-8 md:gap-12">
               {navLinks.map((link, idx) => (

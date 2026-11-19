@@ -50,11 +50,11 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="w-full py-32 bg-black flex justify-center px-4 md:px-8 border-t border-white/5">
+    <section id="contact" className="w-full py-20 lg:py-32 bg-black flex justify-center px-4 md:px-8 border-t border-white/5">
       <motion.div 
         variants={revealGroup}
         {...reveal}
-        className="max-w-6xl w-full flex flex-col md:flex-row gap-16 md:gap-24"
+        className="max-w-6xl w-full flex flex-col lg:flex-row gap-12 lg:gap-24"
       >
         
         {/* LEFT SIDE: Text & Socials */}

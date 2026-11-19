@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { revealItem, useReveal } from '../lib/motion';
+import TiltCard from './TiltCard';
 
 const venturesData = [
   {
@@ -73,12 +74,12 @@ export default function Journey() {
   };
 
   return (
-    <section id="journey" className="w-full py-24 bg-black flex flex-col items-center px-4 md:px-8 overflow-hidden">
+    <section id="journey" className="w-full py-16 lg:py-24 bg-black flex flex-col items-center px-4 md:px-8 overflow-hidden">
       
       <motion.h2
         variants={revealItem}
         {...reveal}
-        className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
+        className="text-4xl md:text-5xl font-serif text-white mb-12 lg:mb-20 text-center tracking-wide"
       >
         Professional Ventures
       </motion.h2>
@@ -89,10 +90,12 @@ export default function Journey() {
           const isEven = index % 2 === 0;
 
           return (
-            <motion.div 
+            <motion.div
               key={item.id}
               variants={revealItem}
               {...reveal}
+            >
+            <TiltCard
               className={`glass-card w-full rounded-2xl md:rounded-[2rem] p-8 md:p-12 lg:p-16 flex flex-col gap-10 lg:gap-16 group cursor-pointer ${
                 isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
               }`}
@@ -103,7 +106,8 @@ export default function Journey() {
                 <h4 className="text-[10px] md:text-xs tracking-[0.2em] text-white/50 uppercase mb-3">
                   {item.subtitle}
                 </h4>
-                <h3 className="text-3xl md:text-4xl font-serif text-white mb-6">
+                {/* Parallax: title sits slightly in front of the body text, images slightly behind */}
+                <h3 className="parallax-front text-3xl md:text-4xl font-serif text-white mb-6">
                   {item.title}
                 </h3>
                 <p className="text-sm md:text-base text-white/70 leading-relaxed font-light mb-8">
@@ -116,7 +120,7 @@ export default function Journey() {
                       href={item.link} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold tracking-widest uppercase bg-white/10 text-white border border-white/20 hover:bg-white hover:text-black transition-colors rounded-lg"
+                      className="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold tracking-widest uppercase bg-white/10 text-white border border-white/20 hover:bg-white hover:text-black transition-colors rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                     >
                       <ExternalLink size={16} /> Visit Website
                     </a>
@@ -129,7 +133,7 @@ export default function Journey() {
                 initial="hidden"
                 animate="hidden"
                 whileHover="hover"
-                className="flex-none lg:flex-1 w-full h-[350px] md:h-[400px] lg:h-[450px] relative z-10 mt-2 lg:mt-0"
+                className="parallax-back flex-none lg:flex-1 w-full h-[350px] md:h-[400px] lg:h-[450px] relative z-10 mt-2 lg:mt-0"
               >
                 {/* Back Image */}
                 <VentureImage
@@ -150,6 +154,7 @@ export default function Journey() {
                 />
               </motion.div>
 
+            </TiltCard>
             </motion.div>
           );
         })}

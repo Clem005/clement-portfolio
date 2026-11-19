@@ -7,7 +7,8 @@ export default function Footer() {
       
       <button 
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="mt-4 md:mt-0 hover:text-white transition-colors uppercase tracking-[0.2em]"
+        // py-3 / -my-3 gives a 40px touch target without changing the footer's layout
+        className="mt-1 py-3 -mb-3 md:-my-3 hover:text-white transition-colors uppercase tracking-[0.2em]"
       >
         Back to top ↑
       </button>

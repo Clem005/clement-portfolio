@@ -5,6 +5,7 @@ import { Download } from 'lucide-react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import AudienceQuestion from './components/AudienceQuestion';
+import DepthSection from './components/DepthSection';
 import Skills from './components/Skills';
 import About from './components/About';
 import Journey from './components/Journey';
@@ -72,7 +73,7 @@ function Portfolio() {
           only re-orders these wrappers visually: nothing remounts or refetches. */}
       <div ref={viewRef} className="flex flex-col w-full">
         {view === 'cv' && (
-          <div className="-order-1 w-full flex justify-center px-4 pt-28">
+          <div className="-order-1 w-full flex justify-center px-4 pt-16 lg:pt-28">
             <a
               href={CV_URL}
               download={CV_FILENAME}
@@ -85,9 +86,9 @@ function Portfolio() {
         {domOrder.map((key) => {
           const Section = sections[key];
           return (
-            <div key={key} className="w-full" style={{ order: viewOrder[view].indexOf(key) }}>
+            <DepthSection key={key} style={{ order: viewOrder[view].indexOf(key) }}>
               <Section />
-            </div>
+            </DepthSection>
           );
         })}
       </div>

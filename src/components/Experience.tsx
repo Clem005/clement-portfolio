@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowUpRight } from 'lucide-react';
 import { revealItem, useReveal } from '../lib/motion';
 import { byMostRecent, tidyText } from '../lib/text';
+import TiltCard from './TiltCard';
 
 interface ExperienceType {
   id: string;
@@ -49,14 +51,22 @@ export default function Experience() {
     return () => { document.body.style.overflow = 'unset'; }
   }, [selectedExp]);
 
+  // Close the details panel with Escape
+  useEffect(() => {
+    if (!selectedExp) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setSelectedExp(null); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selectedExp]);
+
   return (
-    <section id="experience" className="w-full py-32 bg-black flex justify-center px-4 md:px-8">
+    <section id="experience" className="w-full py-20 lg:py-32 bg-black flex justify-center px-4 md:px-8">
       <div className="max-w-6xl w-full flex flex-col items-center">
         
         <motion.h2
           variants={revealItem}
           {...reveal}
-          className="text-4xl md:text-5xl font-serif text-white mb-20 text-center tracking-wide"
+          className="text-4xl md:text-5xl font-serif text-white mb-12 lg:mb-20 text-center tracking-wide"
         >
           Experience
         </motion.h2>
@@ -77,8 +87,15 @@ export default function Experience() {
                 variants={revealItem}
                 {...reveal}
                 custom={idx % 2} // stagger the two cards that share a row
+                className="h-full"
+              >
+              <TiltCard
+                role="button"
+                tabIndex={0}
+                aria-label={`${exp.role}, ${exp.organization}. Read more`}
                 onClick={() => setSelectedExp(exp)}
-                className="glass-card p-8 rounded-2xl cursor-pointer group hover:border-white/20 transition-colors duration-300 relative overflow-hidden flex flex-col justify-between min-h-[220px]"
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedExp(exp); } }}
+                className="glass-card h-full p-8 rounded-2xl cursor-pointer group hover:border-white/20 transition-colors duration-300 relative overflow-hidden flex flex-col justify-between min-h-[220px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
               >
                 <div>
                   <div className="flex justify-between items-start mb-4">
@@ -94,6 +111,7 @@ export default function Experience() {
                   <span className="text-xs tracking-widest text-white/40">READ MORE</span>
                   <span className="text-xs tracking-widest text-white/40">{exp.dateRange}</span>
                 </div>
+              </TiltCard>
               </motion.div>
             ))}
           </div>
@@ -101,7 +119,8 @@ export default function Experience() {
 
       </div>
 
-      <AnimatePresence>
+      {/* Rendered at the page root so the section's 3D transform can't affect its fixed positioning */}
+      {createPortal(<AnimatePresence>
         {selectedExp && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -116,6 +135,7 @@ export default function Experience() {
             >
               <button 
                 onClick={() => setSelectedExp(null)}
+                aria-label="Close"
                 className="absolute top-6 right-6 md:top-8 md:right-8 text-white/50 hover:text-white transition-colors bg-white/5 rounded-full p-2"
               >
                 <X size={24} />
@@ -143,7 +163,7 @@ export default function Experience() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </section>
   );
 }

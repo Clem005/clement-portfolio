@@ -26,7 +26,7 @@ export default function About() {
   const reveal = useReveal();
 
   return (
-    <section id="about" className="w-full py-24 bg-black flex justify-center px-4 md:px-8">
+    <section id="about" className="w-full py-16 lg:py-24 bg-black flex justify-center px-4 md:px-8">
       <motion.div
         variants={revealItem}
         {...reveal}
@@ -39,7 +39,8 @@ export default function About() {
           {...reveal}
           className="flex-1 flex flex-col z-10 w-full"
         >
-          <motion.h2 variants={revealItem} className="text-4xl md:text-5xl font-serif text-white mb-8">
+          {/* Parallax: heading slightly in front of the body text, images slightly behind */}
+          <motion.h2 variants={revealItem} className="parallax-front text-4xl md:text-5xl font-serif text-white mb-8">
             The Approach
           </motion.h2>
 
@@ -68,7 +69,7 @@ export default function About() {
           variants={revealGroup}
           {...reveal}
           whileHover="hover"
-          className="flex-none lg:flex-1 w-full h-[500px] lg:h-[550px] relative z-10 mt-12 lg:mt-0 cursor-pointer"
+          className="parallax-back flex-none lg:flex-1 w-full h-[500px] lg:h-[550px] relative z-10 mt-12 lg:mt-0 cursor-pointer"
         >
           <motion.img
             variants={backImageVariants}
